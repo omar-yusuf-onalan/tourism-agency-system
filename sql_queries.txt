@@ -1,0 +1,139 @@
+CREATE SCHEMA `agency` ;
+
+CREATE TABLE `agency`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `pass` VARCHAR(255) NOT NULL,
+  `role` ENUM('admin', 'agent') NOT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE `agency`.`hotel` (
+  `hotel_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(255) NOT NULL,
+  `region` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `telephone` VARCHAR(255) NOT NULL,
+  `star` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`hotel_id`));
+
+CREATE TABLE `agency`.`period` (
+  `period_id` INT NOT NULL AUTO_INCREMENT,
+  `hotel_id` INT NOT NULL,
+  `winter_start` DATE NOT NULL,
+  `winter_end` DATE NOT NULL,
+  `summer_start` DATE NOT NULL,
+  `summer_end` DATE NOT NULL,
+  PRIMARY KEY (`period_id`));
+
+CREATE TABLE `agency`.`facility` (
+  `facility_id` INT NOT NULL AUTO_INCREMENT,
+  `hotel_id` INT NOT NULL,
+  `type` ENUM('Free Parking', 'Free Wifi', 'Swimming Pool', 'Fitness Center', 'Hotel Concierge', 'Spa', 'Room Service') NOT NULL,
+  PRIMARY KEY (`facility_id`));
+
+CREATE TABLE `agency`.`lodging` (
+  `lodging_id` INT NOT NULL AUTO_INCREMENT,
+  `hotel_id` INT NOT NULL,
+  `type` ENUM('Ultra Everything', 'Everything', 'Room Breakfast', 'Full Lodging', 'Half Lodging', 'Only Bed', 'Full Credit') NOT NULL,
+  PRIMARY KEY (`lodging_id`));
+
+CREATE TABLE `agency`.`room` (
+  `room_id` INT NOT NULL AUTO_INCREMENT,
+  `hotel_id` INT NOT NULL,
+  `period_id` INT NOT NULL,
+  `name` ENUM('Single', 'Double', 'Suite') NOT NULL,
+  `number_of_beds` INT NOT NULL,
+  `item` VARCHAR(255) NULL,
+  `square_meter` VARCHAR(255) NULL,
+  `stock` INT NOT NULL,
+  PRIMARY KEY (`room_id`));
+
+CREATE TABLE `agency`.`reservation` (
+  `reservation_id` INT NOT NULL AUTO_INCREMENT,
+  `room_id` INT NOT NULL,
+  `contact_name` VARCHAR(255) NOT NULL,
+  `contact_telephone` VARCHAR(255) NOT NULL,
+  `contact_email` VARCHAR(255) NOT NULL,
+  `note` VARCHAR(255) NOT NULL,
+  `adult_information` VARCHAR(255) NOT NULL,
+  `child_information` VARCHAR(255) NOT NULL,
+  `arrival` DATE NOT NULL,
+  `departure` DATE NOT NULL,
+  PRIMARY KEY (`reservation_id`));
+
+CREATE TABLE `agency`.`price` (
+  `price_id` INT NOT NULL AUTO_INCREMENT,
+  `lodging_id` INT NOT NULL,
+  `room_id` INT NOT NULL,
+  `winter_adult_price` DOUBLE NOT NULL,
+  `winter_child_price` DOUBLE NOT NULL,
+  `summer_adult_price` DOUBLE NOT NULL,
+  `summer_child_price` DOUBLE NOT NULL,
+  PRIMARY KEY (`price_id`));
+
+INSERT INTO `agency`.`user` (`name`, `email`, `pass`, `role`)
+VALUES
+  ('Admin User', 'admin@example.com', 'adminpassword', 'admin'),
+  ('Agent 1', 'agent1@example.com', 'agent1password', 'agent'),
+  ('Agent 2', 'agent2@example.com', 'agent2password', 'agent'),
+  ('Agent 3', 'agent3@example.com', 'agent3password', 'agent'),
+  ('Agent 4', 'agent4@example.com', 'agent4password', 'agent');
+
+INSERT INTO `agency`.`hotel` (`name`, `city`, `region`, `address`, `email`, `telephone`, `star`)
+VALUES
+  ('Luxury Resort', 'Maldives', 'North Atoll', '123 Paradise Island', 'luxury@example.com', '+1234567890', '5 stars'),
+  ('Mountain Lodge', 'Switzerland', 'Swiss Alps', '456 Alpine Rd', 'mountain@example.com', '+9876543210', '4 stars'),
+  ('Beachfront Hotel', 'Florida', 'Miami Beach', '789 Ocean Drive', 'beachfront@example.com', '+1122334455', '4 stars'),
+  ('City Center Inn', 'France', 'Paris', '101 Eiffel Tower Ave', 'city@example.com', '+3366998877', '3 stars'),
+  ('Cozy Cabin', 'Canada', 'Banff', '234 Forest Road', 'cabin@example.com', '+1555666777', '2 stars');
+
+INSERT INTO `agency`.`period` (`hotel_id`, `winter_start`, `winter_end`, `summer_start`, `summer_end`)
+VALUES
+  (1, '2023-12-01', '2024-02-29', '2024-06-01', '2024-08-31'),
+  (2, '2023-12-01', '2024-03-31', '2024-07-01', '2024-09-30'),
+  (3, '2024-01-01', '2024-03-31', '2024-07-01', '2024-09-30'),
+  (4, '2024-01-01', '2024-04-30', '2024-06-01', '2024-08-31'),
+  (5, '2023-12-01', '2024-03-31', '2024-06-01', '2024-08-31');
+
+INSERT INTO `agency`.`lodging` (`hotel_id`, `type`)
+VALUES
+  (1, 'Ultra Everything'),
+  (2, 'Everything'),
+  (3, 'Room Breakfast'),
+  (4, 'Full Lodging'),
+  (5, 'Only Bed');
+
+INSERT INTO `agency`.`facility` (`hotel_id`, `type`)
+VALUES
+  (1, 'Free Parking'),
+  (2, 'Free Wifi'),
+  (3, 'Swimming Pool'),
+  (4, 'Fitness Center'),
+  (5, 'Hotel Concierge');
+
+INSERT INTO `agency`.`room` (`hotel_id`, `period_id`, `name`, `number_of_beds`, `item`, `square_meter`, `stock`)
+VALUES
+  (1, 1, 'Single', 1, 'Ocean View', '30 sqm', 10),
+  (2, 2, 'Double', 2, 'Mountain View', '40 sqm', 20),
+  (3, 3, 'Suite', 3, 'Beachfront', '60 sqm', 15),
+  (4, 4, 'Single', 1, 'City View', '25 sqm', 12),
+  (5, 5, 'Double', 2, 'Forest View', '35 sqm', 18);
+
+INSERT INTO `agency`.`price` (`lodging_id`, `room_id`, `winter_adult_price`, `winter_child_price`, `summer_adult_price`, `summer_child_price`)
+VALUES
+  (1, 1, 400.00, 100.00, 500.00, 150.00),
+  (2, 2, 600.00, 150.00, 750.00, 200.00),
+  (3, 3, 800.00, 200.00, 1000.00, 250.00),
+  (4, 4, 300.00, 75.00, 400.00, 100.00),
+  (5, 5, 500.00, 125.00, 600.00, 150.00);
+
+INSERT INTO `agency`.`reservation` (`room_id`, `contact_name`, `contact_telephone`, `contact_email`, `note`, `adult_information`, `child_information`, `arrival`, `departure`)
+VALUES
+  (1, 'John Doe', '+1234567890', 'john@example.com', 'Special requests: None', 'Adult 1', 'Child 1', '2024-06-15', '2024-06-22'),
+  (2, 'Alice Smith', '+9876543210', 'alice@example.com', 'Special requests: Vegetarian meals', 'Adult 1, Adult 2', 'Child 1', '2024-07-10', '2024-07-17'),
+  (3, 'David Brown', '+1122334455', 'david@example.com', 'Special requests: Late check-in', 'Adult 1, Adult 2, Adult 3', 'Child 1', '2024-08-05', '2024-08-12'),
+  (4, 'Eva White', '+3366998877', 'eva@example.com', 'Special requests: Airport transfer', 'Adult 1', 'Child 1', '2024-06-20', '2024-06-27'),
+  (5, 'Michael Johnson', '+1555666777', 'michael@example.com', 'Special requests: Spa package', 'Adult 1, Adult 2', 'Child 1', '2024-06-30', '2024-07-07');
