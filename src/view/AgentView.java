@@ -483,9 +483,9 @@ public class AgentView extends Layout {
             public void mouseReleased(MouseEvent e) {
                 int r = tbl_reservation_list.rowAtPoint(e.getPoint());
                 if (r >= 0 && r < tbl_reservation_list.getRowCount()) {
-                    tbl_room_list.setRowSelectionInterval(r, r);
+                    tbl_reservation_list.setRowSelectionInterval(r, r);
                 } else {
-                    tbl_room_list.clearSelection();
+                    tbl_reservation_list.clearSelection();
                 }
 
                 int rowIndex = tbl_reservation_list.getSelectedRow();
